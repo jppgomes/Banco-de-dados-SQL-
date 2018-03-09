@@ -1,0 +1,6 @@
+Nome: joao pedro
+Rg: 3033172
+Cpf: 03231425166
+Número de carros: 2
+Nome(s) do(s) carro(s): kia e gol
+
