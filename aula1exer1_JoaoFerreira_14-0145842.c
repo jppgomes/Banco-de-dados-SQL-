@@ -2,17 +2,20 @@
 #include <stdlib.h>
 
 
-struct Register{
+typedef struct{
 
 	char name[30];
-	char rg[20];
 	char cpf[21];
-	char qtd[9];
-	char car[50];
+	
+}pessoa;
+	
+typedef struct{
 
-};
-	struct Register aux;
+	char nomeCarro[20];
+	char cpfDono[21];
+	char placa[10];
 
+}carro;
 
 FILE *openFile(char option, char nameFile[30])
 {
@@ -23,9 +26,11 @@ FILE *openFile(char option, char nameFile[30])
 		case 'o': //openfile
 			file = fopen(nameFile, "wt");//"wt" abertura para gravação
 			break;
-			case 'l':
+		
+		case 'l':
 			file = fopen(nameFile, "rt"); //"rt" leitura do arquivo
 		break;
+		
 		case 'a':
 			file =fopen(nameFile, "a"); //Abre o arquivo para escrita no final do arquivo. Não apaga o conteúdo pré-existente
 			break;
@@ -46,28 +51,45 @@ void closeFile(FILE *file)
 	fclose(file);
 }
 
-void registerFile()
+void registerFile(pessoa Pessoa)
 
 {
-
+	
 	FILE *file;
-	file = openFile('a', "register.txt");
-	fprintf(file, "Nome: %s", aux.name);
-	fprintf(file, "Rg: %s", aux.rg);
-	fprintf(file, "Cpf: %s", aux.cpf);
-	fprintf(file, "Número de carros: %s", aux.qtd);
-	fprintf(file, "Nome(s) do(s) carro(s): %s\n", aux.car);
-
+	file = openFile('a', "register_people.txt");
+	printf("Nome: ");
+	scanf(" %[^\n]", Pessoa.name);
+	printf("CPF: ");
+	scanf(" %[^\n]", Pessoa.cpf);
+	fprintf(file, "%s | %s\n", Pessoa.cpf, Pessoa.name);
 	closeFile(file);
 }
 
-void list()
+void registerFile2(carro Carro)
+
+{	
+	FILE *file;
+	file = openFile('a', "register_car.txt");
+	printf("Nome do carro: ");
+	scanf(" %[^\n]", Carro.nomeCarro);
+	printf("Placa do carro: ");
+	scanf(" %[^\n]", Carro.placa);
+	printf("Cpf do dono: ");
+	scanf(" %[^\n]", Carro.cpfDono);
+	fprintf(file, "%s | %s | %s", Carro.nomeCarro, Carro.placa, Carro.cpfDono);
+	closeFile(file);
+
+}
+
+void list_people()
 {
 	char url[]="register.txt", info[500];
 	FILE *file;
 
 	file = fopen(url, "r");
+	
 	if(file == NULL)
+		
 		printf("Não foi possivel abrir o arquivo!!\n");
 
 
@@ -79,20 +101,42 @@ else
 	fclose(file);
 }
 
+
+void list_car()
+{
+	char url[]="register_car.txt", info[500];
+	FILE *file;
+
+	file = fopen(url, "r");
+
+	if(file == NULL)
+		printf("Não foi possivel abrir o arquivo!!\n");
+
+	else
+		while ((fgets(info, sizeof(info), file))!= NULL)
+			printf("%s", info);
+
+		fclose(file);
+}
+
+
 int main(void)
 {
 	int option;
-	char name[30], rg[20], cpf[21], car[50], qtd[9];
-
+	pessoa Pessoa;
+	carro Carro;
+	char name[30],cpf[21];
 
 	do
 	{
 		
 		printf("\n\n BEM VINDO AO BANCO DE DADOS PRIMITIVO!!!\n\n");
 		printf("\nMENU\n");
-		printf("\n1 - REGISTRAR PROPRIETÁRIO DO VEICULO");
-		printf("\n2 - LISTAR REGISTROS");
-		printf("\n3 - SAIR");
+		printf("\n1 - REGISTRAR PESSOA");
+		printf("\n2 - REGISTAR CARRO");
+		printf("\n3 - LISTAR PESSOAS");
+		printf("\n4 - LISTAR CARROS");
+		printf("\n5 - SAIR");
 
 		printf("\n\nESCOLHA SUA OPÇÃO: ");
 		scanf("%d", &option);
@@ -101,33 +145,32 @@ int main(void)
 		switch(option)
 		{
 			case 1: 
-				printf("\nNome: ");
-				setbuf(stdin, NULL);
-				fgets(aux.name, 31, stdin);
-				printf("\nRG: ");
-				setbuf(stdin, NULL);
-				fgets(aux.rg, 21, stdin);
-				printf("\nCPF: ");
-				setbuf(stdin, NULL);
-				fgets(aux.cpf, 21, stdin);
-				printf("\nNº DE CARROS: ");
-				setbuf(stdin, NULL);
-				fgets(aux.qtd, 10, stdin);
-				printf("\nNome(s) dos automóvei(s): ");
-				setbuf(stdin, NULL);
-				fgets(aux.car, 51, stdin);
-				registerFile();
+							
+				registerFile(Pessoa);
 				
 				break;				
 
 			case 2:
-				printf("************INICIO LISTA************\n");
-				list();
-				printf("************FIM DA LISTA************");
+				registerFile2(Carro);
 
 				break;
 
 			case 3:
+				printf("************INICIO LISTA************\n\n\n");
+				list_people();
+				printf("\n\n\n************FIM DA LISTA************");
+
+				break;
+
+			case 4:
+
+				printf("************INICIO LISTA************\n\n\n");
+				list_car();
+				printf("\n\n\n************FIM DA LISTA************");
+
+				break;
+
+			case 5:
 				printf("BYE-BYE\n");
 				break;
 
